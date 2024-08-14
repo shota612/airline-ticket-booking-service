@@ -1,6 +1,6 @@
 package com.shotanakano62.domain.models.Passenger
 
-class FistName(private val value: String) {
+class FirstName(private val value: String) {
     init {
         validate(value)
     }
