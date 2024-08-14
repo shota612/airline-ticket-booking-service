@@ -1,6 +1,7 @@
 package com.shotanakano62.domain.models
 
 import com.shotanakano62.domain.models.Passenger.*
+import java.util.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -8,7 +9,8 @@ import kotlin.test.assertNotNull
 
 class PassengerTest {
 
-    val firstName = FistName("Daniel")
+    val uuid = UUID.randomUUID()
+    val firstName = FirstName("Daniel")
     val middleName = "Doe"
     val lastName = LastName("Smith")
 
@@ -17,7 +19,7 @@ class PassengerTest {
         val email = Email("test@example.com")
         val passportNumber = PassportNumber("A1234567")
         val passenger = Passenger.from(
-            id = "1",
+            id = uuid,
             firstName = firstName,
             middleName = middleName,
             lastName = lastName,
@@ -36,7 +38,7 @@ class PassengerTest {
         val email = Email("test@example.com")
         val passportNumber = PassportNumber("A1234567")
         val passenger = Passenger.from(
-            id = "1",
+            id = uuid,
             firstName = firstName,
             middleName = null,
             lastName = lastName,
@@ -54,8 +56,8 @@ class PassengerTest {
     fun `should throw an exception when creating a passenger with empty first name`() {
         val exception = (assertFailsWith <IllegalArgumentException> {
             Passenger.from(
-                id = "1",
-                firstName =  FistName(""),
+                id = uuid,
+                firstName =  FirstName(""),
                 middleName = "",
                 lastName = LastName(""),
                 email = Email("invalid-email"),
@@ -71,7 +73,7 @@ class PassengerTest {
     fun `should throw an exception when creating a passenger with empty last name`() {
         val exception = (assertFailsWith <IllegalArgumentException> {
             Passenger.from(
-                id = "1",
+                id = uuid,
                 firstName =  firstName,
                 middleName = "",
                 lastName = LastName(""),
@@ -88,7 +90,7 @@ class PassengerTest {
     fun `should throw an exception when creating a passenger with an invalid email`() {
         val exception = (assertFailsWith <IllegalArgumentException> {
             Passenger.from(
-                id = "1",
+                id = uuid,
                 firstName = firstName,
                 middleName = middleName,
                 lastName = lastName,
@@ -105,7 +107,7 @@ class PassengerTest {
     fun `should throw an exception when creating a passenger with an invalid passport number`() {
         val exception = (assertFailsWith <IllegalArgumentException> {
             Passenger.from(
-                id = "1",
+                id = uuid,
                 firstName = firstName,
                 middleName = middleName,
                 lastName = lastName,
