@@ -1,6 +1,7 @@
 package com.shotanakano62.infrastructure.repositories
 
 import com.shotanakano62.domain.models.Passenger.Passenger
+import com.shotanakano62.domain.models.Passenger.PassengerId
 import com.shotanakano62.domain.repositories.PassengerRepository
 
 class InMemoryPassengerRepository: PassengerRepository {
@@ -14,7 +15,12 @@ class InMemoryPassengerRepository: PassengerRepository {
         TODO("Not yet implemented")
     }
 
-    override fun save(passenger: Passenger) {
+    override fun insert(passenger: Passenger): PassengerId {
         passengers.add(passenger)
+        return passenger.id
+    }
+
+    override fun update(passenger: Passenger) {
+        TODO("Not yet implemented")
     }
 }

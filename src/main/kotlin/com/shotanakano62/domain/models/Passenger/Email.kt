@@ -5,6 +5,10 @@ class Email(private val value: String) {
         validateEmail(value)
     }
 
+    fun value(): String {
+        return value
+    }
+
     private fun validateEmail(value: String) {
         if (!value.contains("@")) {
             throw IllegalArgumentException("Invalid email: $value")

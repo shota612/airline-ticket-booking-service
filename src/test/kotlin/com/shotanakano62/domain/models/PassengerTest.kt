@@ -9,10 +9,10 @@ import kotlin.test.assertNotNull
 
 class PassengerTest {
 
-    val uuid = UUID.randomUUID()
-    val firstName = FirstName("Daniel")
-    val middleName = "Doe"
-    val lastName = LastName("Smith")
+    private val uuid = PassengerId.from(UUID.randomUUID())
+    private val firstName = FirstName("Daniel")
+    private val middleName = "Doe"
+    private val lastName = LastName("Smith")
 
     @Test
     fun `should create a valid passenger`() {

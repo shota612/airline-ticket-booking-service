@@ -12,7 +12,7 @@ import kotlin.test.assertTrue
 class PassengerRepositoryTest {
 
     private lateinit var passengerRepository: PassengerRepository
-    val uuid = UUID.randomUUID()
+    val uuid = PassengerId.from(UUID.randomUUID())
 
     @Before
     fun setUp() {
@@ -52,9 +52,9 @@ class PassengerRepositoryTest {
     @Test
     fun `findAll should return all passengers`() {
         // Given
-        passengerRepository.save(passenger1)
-        passengerRepository.save(passenger2)
-        passengerRepository.save(passenger3)
+        passengerRepository.insert(passenger1)
+        passengerRepository.insert(passenger2)
+        passengerRepository.insert(passenger3)
 
         // When
         val passengers = passengerRepository.findAll()

@@ -5,6 +5,10 @@ class LastName(private val value: String) {
         validate(value)
     }
 
+    fun value(): String {
+        return value
+    }
+
     private fun validate(value: String) {
         if (value.isBlank()) {
             throw IllegalArgumentException("Last name must not be blank")

@@ -2,9 +2,10 @@ package com.shotanakano62.domain.models.Passenger
 
 import java.util.UUID
 
+data class Passengers (val list: List<Passenger>)
 
 data class Passenger(
-    val id: UUID,
+    val id: PassengerId,
     val firstName: FirstName,
     val middleName: String?,
     val lastName: LastName,
@@ -14,7 +15,7 @@ data class Passenger(
 ) {
     companion object {
         fun from(
-            id: UUID,
+            id: PassengerId,
             firstName: FirstName,
             middleName: String?,
             lastName: LastName,
