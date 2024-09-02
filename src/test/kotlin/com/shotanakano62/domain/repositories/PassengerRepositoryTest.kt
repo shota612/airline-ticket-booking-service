@@ -1,26 +1,30 @@
 package com.shotanakano62.domain.repositories
 
 import com.shotanakano62.domain.models.Passenger.*
-import com.shotanakano62.infrastructure.repositories.InMemoryPassengerRepository
-import org.junit.Before
+import com.shotanakano62.infrastructure.database.Passengers
+import com.shotanakano62.infrastructure.repositories.PassengerRepositoryImpl
+import junit.framework.TestCase
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.TransactionManager
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.Test
+import java.sql.Connection
+import java.sql.DriverManager
 import java.util.*
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 
 class PassengerRepositoryTest {
 
+    private val sqlitePath = "jdbc:sqlite:file:test?mode=memory&cache=shared"
     private lateinit var passengerRepository: PassengerRepository
-    val uuid = PassengerId.from(UUID.randomUUID())
 
-    @Before
-    fun setUp() {
-        passengerRepository = InMemoryPassengerRepository()
-    }
-
-    val passenger1 = Passenger.from(
-        id = uuid,
+    private val passenger1 = Passenger.from(
+        id = PassengerId.from(UUID.randomUUID()),
         firstName = FirstName("John"),
         middleName = "Doe",
         lastName = LastName("Smith"),
@@ -29,8 +33,8 @@ class PassengerRepositoryTest {
         passportNumber = PassportNumber("A1234567")
     )
 
-    val passenger2 = Passenger.from(
-        id = uuid,
+    private val passenger2 = Passenger.from(
+        id = PassengerId.from(UUID.randomUUID()),
         firstName = FirstName("Michael"),
         middleName = "Doe",
         lastName = LastName("Johnson"),
@@ -39,8 +43,8 @@ class PassengerRepositoryTest {
         passportNumber = PassportNumber("B1234567")
     )
 
-    val passenger3 = Passenger.from(
-        id = uuid,
+    private val passenger3 = Passenger.from(
+        id = PassengerId.from(UUID.randomUUID()),
         firstName = FirstName("Rachel"),
         middleName = "Doe",
         lastName = LastName("Parker"),
@@ -49,12 +53,38 @@ class PassengerRepositoryTest {
         passportNumber = PassportNumber("C1234567")
     )
 
+    @BeforeTest
+    fun setUp() {
+
+        DriverManager.getConnection(sqlitePath)
+        Database.connect(sqlitePath)
+        TransactionManager.manager.defaultIsolationLevel = Connection.TRANSACTION_SERIALIZABLE
+
+        transaction {
+            SchemaUtils.create(Passengers)
+        }
+
+        passengerRepository = PassengerRepositoryImpl()
+
+        transaction {
+            passengerRepository.insert(passenger1)
+            passengerRepository.insert(passenger2)
+            passengerRepository.insert(passenger3)
+        }
+    }
+
+    @AfterTest
+    fun tearDown() {
+        transaction {
+            SchemaUtils.drop(Passengers)
+        }
+
+        TransactionManager.closeAndUnregister(database = Database.connect(sqlitePath))
+    }
+
+
     @Test
     fun `findAll should return all passengers`() {
-        // Given
-        passengerRepository.insert(passenger1)
-        passengerRepository.insert(passenger2)
-        passengerRepository.insert(passenger3)
 
         // When
         val passengers = passengerRepository.findAll()
@@ -64,6 +94,6 @@ class PassengerRepositoryTest {
         assertTrue(passengers.contains(passenger1))
         assertTrue(passengers.contains(passenger2))
         assertTrue(passengers.contains(passenger3))
-
     }
 }
+

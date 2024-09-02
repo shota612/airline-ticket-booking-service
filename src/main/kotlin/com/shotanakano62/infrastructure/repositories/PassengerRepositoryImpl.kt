@@ -6,7 +6,6 @@ import com.shotanakano62.infrastructure.database.Passengers
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.statements.InsertStatement
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class PassengerRepositoryImpl: PassengerRepository {
@@ -20,6 +19,7 @@ class PassengerRepositoryImpl: PassengerRepository {
 
     override fun insert(passenger: Passenger): PassengerId = transaction {
         val id = Passengers.insert {
+            it[id] = passenger.id.value
             it[firstName] = passenger.firstName.value()
             it[middleName] = passenger.middleName
             it[lastName] = passenger.lastName.value()
