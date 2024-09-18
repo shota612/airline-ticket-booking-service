@@ -2,9 +2,12 @@ package com.shotanakano62
 
 import com.shotanakano62.infrastructure.database.DatabaseFactory
 import com.shotanakano62.plugins.*
+import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import io.ktor.server.plugins.contentnegotiation.*
+import kotlinx.serialization.json.Json
 
 fun main() {
     DatabaseFactory.init()
@@ -13,5 +16,12 @@ fun main() {
 }
 
 fun Application.module() {
+    install(ContentNegotiation) {
+        json(Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+        })
+    }
     configureRouting()
 }
